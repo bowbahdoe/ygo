@@ -1,2 +1,2 @@
-#include "common.h"
 #include "ocgapi.h"
+#include "ocgapi_constants.h"

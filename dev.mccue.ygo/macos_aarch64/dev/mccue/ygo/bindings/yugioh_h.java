@@ -73,6 +73,15 @@ public class yugioh_h {
     public static final AddressLayout C_POINTER = ValueLayout.ADDRESS
             .withTargetLayout(MemoryLayout.sequenceLayout(java.lang.Long.MAX_VALUE, JAVA_BYTE));
     public static final ValueLayout.OfLong C_LONG = ValueLayout.JAVA_LONG;
+    private static final int __WORDSIZE = (int)64L;
+    /**
+     * {@snippet lang=c :
+     * #define __WORDSIZE 64
+     * }
+     */
+    public static int __WORDSIZE() {
+        return __WORDSIZE;
+    }
     private static final int __has_safe_buffers = (int)0L;
     /**
      * {@snippet lang=c :
@@ -217,15 +226,6 @@ public class yugioh_h {
     public static int __has_ptrcheck() {
         return __has_ptrcheck;
     }
-    private static final int __WORDSIZE = (int)64L;
-    /**
-     * {@snippet lang=c :
-     * #define __WORDSIZE 64
-     * }
-     */
-    public static int __WORDSIZE() {
-        return __WORDSIZE;
-    }
     private static final int USE_CLANG_TYPES = (int)0L;
     /**
      * {@snippet lang=c :
@@ -361,23 +361,23 @@ public class yugioh_h {
     public static int UINT16_MAX() {
         return UINT16_MAX;
     }
-    private static final int TRUE = (int)1L;
+    private static final int OCG_VERSION_MAJOR = (int)11L;
     /**
      * {@snippet lang=c :
-     * #define TRUE 1
+     * #define OCG_VERSION_MAJOR 11
      * }
      */
-    public static int TRUE() {
-        return TRUE;
+    public static int OCG_VERSION_MAJOR() {
+        return OCG_VERSION_MAJOR;
     }
-    private static final int FALSE = (int)0L;
+    private static final int OCG_VERSION_MINOR = (int)0L;
     /**
      * {@snippet lang=c :
-     * #define FALSE 0
+     * #define OCG_VERSION_MINOR 0
      * }
      */
-    public static int FALSE() {
-        return FALSE;
+    public static int OCG_VERSION_MINOR() {
+        return OCG_VERSION_MINOR;
     }
     private static final int LOCATION_DECK = (int)1L;
     /**
@@ -451,96 +451,6 @@ public class yugioh_h {
     public static int LOCATION_OVERLAY() {
         return LOCATION_OVERLAY;
     }
-    private static final int LOCATION_ONFIELD = (int)12L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_ONFIELD 12
-     * }
-     */
-    public static int LOCATION_ONFIELD() {
-        return LOCATION_ONFIELD;
-    }
-    private static final int LOCATION_FZONE = (int)256L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_FZONE 256
-     * }
-     */
-    public static int LOCATION_FZONE() {
-        return LOCATION_FZONE;
-    }
-    private static final int LOCATION_PZONE = (int)512L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_PZONE 512
-     * }
-     */
-    public static int LOCATION_PZONE() {
-        return LOCATION_PZONE;
-    }
-    private static final int LOCATION_STZONE = (int)1024L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_STZONE 1024
-     * }
-     */
-    public static int LOCATION_STZONE() {
-        return LOCATION_STZONE;
-    }
-    private static final int LOCATION_MMZONE = (int)2048L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_MMZONE 2048
-     * }
-     */
-    public static int LOCATION_MMZONE() {
-        return LOCATION_MMZONE;
-    }
-    private static final int LOCATION_EMZONE = (int)4096L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_EMZONE 4096
-     * }
-     */
-    public static int LOCATION_EMZONE() {
-        return LOCATION_EMZONE;
-    }
-    private static final int LOCATION_DECKBOT = (int)65537L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_DECKBOT 65537
-     * }
-     */
-    public static int LOCATION_DECKBOT() {
-        return LOCATION_DECKBOT;
-    }
-    private static final int LOCATION_DECKSHF = (int)131073L;
-    /**
-     * {@snippet lang=c :
-     * #define LOCATION_DECKSHF 131073
-     * }
-     */
-    public static int LOCATION_DECKSHF() {
-        return LOCATION_DECKSHF;
-    }
-    private static final int COIN_HEADS = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * #define COIN_HEADS 1
-     * }
-     */
-    public static int COIN_HEADS() {
-        return COIN_HEADS;
-    }
-    private static final int COIN_TAILS = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * #define COIN_TAILS 0
-     * }
-     */
-    public static int COIN_TAILS() {
-        return COIN_TAILS;
-    }
     private static final int POS_FACEUP_ATTACK = (int)1L;
     /**
      * {@snippet lang=c :
@@ -576,51 +486,6 @@ public class yugioh_h {
      */
     public static int POS_FACEDOWN_DEFENSE() {
         return POS_FACEDOWN_DEFENSE;
-    }
-    private static final int POS_FACEUP = (int)5L;
-    /**
-     * {@snippet lang=c :
-     * #define POS_FACEUP 5
-     * }
-     */
-    public static int POS_FACEUP() {
-        return POS_FACEUP;
-    }
-    private static final int POS_FACEDOWN = (int)10L;
-    /**
-     * {@snippet lang=c :
-     * #define POS_FACEDOWN 10
-     * }
-     */
-    public static int POS_FACEDOWN() {
-        return POS_FACEDOWN;
-    }
-    private static final int POS_ATTACK = (int)3L;
-    /**
-     * {@snippet lang=c :
-     * #define POS_ATTACK 3
-     * }
-     */
-    public static int POS_ATTACK() {
-        return POS_ATTACK;
-    }
-    private static final int POS_DEFENSE = (int)12L;
-    /**
-     * {@snippet lang=c :
-     * #define POS_DEFENSE 12
-     * }
-     */
-    public static int POS_DEFENSE() {
-        return POS_DEFENSE;
-    }
-    private static final int NO_FLIP_EFFECT = (int)65536L;
-    /**
-     * {@snippet lang=c :
-     * #define NO_FLIP_EFFECT 65536
-     * }
-     */
-    public static int NO_FLIP_EFFECT() {
-        return NO_FLIP_EFFECT;
     }
     private static final int TYPE_MONSTER = (int)1L;
     /**
@@ -2863,15 +2728,6 @@ public class yugioh_h {
     public static int MSG_REMOVE_CARDS() {
         return MSG_REMOVE_CARDS;
     }
-    private static final int OLD_REPLAY_MODE = (int)231L;
-    /**
-     * {@snippet lang=c :
-     * #define OLD_REPLAY_MODE 231
-     * }
-     */
-    public static int OLD_REPLAY_MODE() {
-        return OLD_REPLAY_MODE;
-    }
     private static final int HINT_EVENT = (int)1L;
     /**
      * {@snippet lang=c :
@@ -3096,15 +2952,6 @@ public class yugioh_h {
      */
     public static int PLAYER_ALL() {
         return PLAYER_ALL;
-    }
-    private static final int PLAYER_SELFDES = (int)5L;
-    /**
-     * {@snippet lang=c :
-     * #define PLAYER_SELFDES 5
-     * }
-     */
-    public static int PLAYER_SELFDES() {
-        return PLAYER_SELFDES;
     }
     private static final int PHASE_DRAW = (int)1L;
     /**
@@ -3492,84 +3339,6 @@ public class yugioh_h {
      */
     public static int DUEL_MODE_MR5_FORB() {
         return DUEL_MODE_MR5_FORB;
-    }
-    private static final int OCG_VERSION_MAJOR = (int)11L;
-    /**
-     * {@snippet lang=c :
-     * #define OCG_VERSION_MAJOR 11
-     * }
-     */
-    public static int OCG_VERSION_MAJOR() {
-        return OCG_VERSION_MAJOR;
-    }
-    private static final int OCG_VERSION_MINOR = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * #define OCG_VERSION_MINOR 0
-     * }
-     */
-    public static int OCG_VERSION_MINOR() {
-        return OCG_VERSION_MINOR;
-    }
-
-    private static class __assert_rtn {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            yugioh_h.C_POINTER,
-            yugioh_h.C_POINTER,
-            yugioh_h.C_INT,
-            yugioh_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = yugioh_h.findOrThrow("__assert_rtn");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void __assert_rtn(const char *, const char *, int, const char *)
-     * }
-     */
-    public static FunctionDescriptor __assert_rtn$descriptor() {
-        return __assert_rtn.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void __assert_rtn(const char *, const char *, int, const char *)
-     * }
-     */
-    public static MethodHandle __assert_rtn$handle() {
-        return __assert_rtn.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void __assert_rtn(const char *, const char *, int, const char *)
-     * }
-     */
-    public static MemorySegment __assert_rtn$address() {
-        return __assert_rtn.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void __assert_rtn(const char *, const char *, int, const char *)
-     * }
-     */
-    public static void __assert_rtn(MemorySegment x0, MemorySegment x1, int x2, MemorySegment x3) {
-        var mh$ = __assert_rtn.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("__assert_rtn", x0, x1, x2, x3);
-            }
-            mh$.invokeExact(x0, x1, x2, x3);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
     }
     /**
      * {@snippet lang=c :
@@ -3989,69 +3758,6 @@ public class yugioh_h {
      * }
      */
     public static final OfLong uintmax_t = yugioh_h.C_LONG;
-    private static final byte ACTIVITY_SUMMON = (byte)1L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_SUMMON = 1
-     * }
-     */
-    public static byte ACTIVITY_SUMMON() {
-        return ACTIVITY_SUMMON;
-    }
-    private static final byte ACTIVITY_NORMALSUMMON = (byte)2L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_NORMALSUMMON = 2
-     * }
-     */
-    public static byte ACTIVITY_NORMALSUMMON() {
-        return ACTIVITY_NORMALSUMMON;
-    }
-    private static final byte ACTIVITY_SPSUMMON = (byte)3L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_SPSUMMON = 3
-     * }
-     */
-    public static byte ACTIVITY_SPSUMMON() {
-        return ACTIVITY_SPSUMMON;
-    }
-    private static final byte ACTIVITY_FLIPSUMMON = (byte)4L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_FLIPSUMMON = 4
-     * }
-     */
-    public static byte ACTIVITY_FLIPSUMMON() {
-        return ACTIVITY_FLIPSUMMON;
-    }
-    private static final byte ACTIVITY_ATTACK = (byte)5L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_ATTACK = 5
-     * }
-     */
-    public static byte ACTIVITY_ATTACK() {
-        return ACTIVITY_ATTACK;
-    }
-    private static final byte ACTIVITY_BATTLE_PHASE = (byte)6L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_BATTLE_PHASE = 6
-     * }
-     */
-    public static byte ACTIVITY_BATTLE_PHASE() {
-        return ACTIVITY_BATTLE_PHASE;
-    }
-    private static final byte ACTIVITY_CHAIN = (byte)7L;
-    /**
-     * {@snippet lang=c :
-     * enum ActivityType.ACTIVITY_CHAIN = 7
-     * }
-     */
-    public static byte ACTIVITY_CHAIN() {
-        return ACTIVITY_CHAIN;
-    }
     private static final int OCG_LOG_TYPE_ERROR = (int)0L;
     /**
      * {@snippet lang=c :
@@ -4988,18 +4694,6 @@ public class yugioh_h {
     public static long __DARWIN_C_LEVEL() {
         return __DARWIN_C_LEVEL;
     }
-    /**
-     * {@snippet lang=c :
-     * #define __ASSERT_FILE_NAME "jextract$8170948928233844515.h"
-     * }
-     */
-    public static MemorySegment __ASSERT_FILE_NAME() {
-        class Holder {
-            static final MemorySegment __ASSERT_FILE_NAME
-                = yugioh_h.LIBRARY_ARENA.allocateFrom("jextract$8170948928233844515.h");
-        }
-        return Holder.__ASSERT_FILE_NAME;
-    }
     private static final MemorySegment __DARWIN_NULL = MemorySegment.ofAddress(0L);
     /**
      * {@snippet lang=c :
@@ -5432,6 +5126,51 @@ public class yugioh_h {
     public static int SIG_ATOMIC_MAX() {
         return SIG_ATOMIC_MAX;
     }
+    private static final int LOCATION_ONFIELD = (int)12L;
+    /**
+     * {@snippet lang=c :
+     * #define LOCATION_ONFIELD 12
+     * }
+     */
+    public static int LOCATION_ONFIELD() {
+        return LOCATION_ONFIELD;
+    }
+    private static final int POS_FACEUP = (int)5L;
+    /**
+     * {@snippet lang=c :
+     * #define POS_FACEUP 5
+     * }
+     */
+    public static int POS_FACEUP() {
+        return POS_FACEUP;
+    }
+    private static final int POS_FACEDOWN = (int)10L;
+    /**
+     * {@snippet lang=c :
+     * #define POS_FACEDOWN 10
+     * }
+     */
+    public static int POS_FACEDOWN() {
+        return POS_FACEDOWN;
+    }
+    private static final int POS_ATTACK = (int)3L;
+    /**
+     * {@snippet lang=c :
+     * #define POS_ATTACK 3
+     * }
+     */
+    public static int POS_ATTACK() {
+        return POS_ATTACK;
+    }
+    private static final int POS_DEFENSE = (int)12L;
+    /**
+     * {@snippet lang=c :
+     * #define POS_DEFENSE 12
+     * }
+     */
+    public static int POS_DEFENSE() {
+        return POS_DEFENSE;
+    }
     private static final int ATTRIBUTE_ALL = (int)127L;
     /**
      * {@snippet lang=c :
@@ -5468,10 +5207,10 @@ public class yugioh_h {
     public static int RACE_MAX() {
         return RACE_MAX;
     }
-    private static final long RACE_ALL = -1L;
+    private static final long RACE_ALL = 4611686022722355199L;
     /**
      * {@snippet lang=c :
-     * #define RACE_ALL -1
+     * #define RACE_ALL 4611686022722355199
      * }
      */
     public static long RACE_ALL() {

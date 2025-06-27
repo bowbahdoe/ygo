@@ -1,4 +1,6 @@
-package dev.mccue.ygo;
+package dev.mccue.ygo.message;
+
+import dev.mccue.ygo.Hint;
 
 public record HintMessage(
         Hint hint,

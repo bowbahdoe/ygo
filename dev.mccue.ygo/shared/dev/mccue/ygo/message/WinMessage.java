@@ -1,4 +1,4 @@
-package dev.mccue.ygo;
+package dev.mccue.ygo.message;
 
 public record WinMessage(
         byte player,

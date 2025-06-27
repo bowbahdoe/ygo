@@ -1,7 +1,10 @@
 package dev.mccue.ygo;
 
+import dev.mccue.ygo.message.*;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static dev.mccue.ygo.bindings.yugioh_h.*;
@@ -11,7 +14,8 @@ record RawMessage(byte[] data) {
         Message message;
 
         var bb = dataBB();
-        var type = MessageType.fromInt(bb.get());
+        var typeByte = bb.get();
+        var type = MessageType.fromInt(Byte.toUnsignedInt(typeByte));
         if (type.value == MSG_HINT()) {
             var hint = Hint.fromInt(bb.get());
             message = new HintMessage(hint, bb.get(), bb.getLong());
@@ -31,7 +35,26 @@ record RawMessage(byte[] data) {
                     bb.get()
             );
         } else if (type.value == MSG_NEW_PHASE()) {
-            message = new NewPhaseMessage(bb.getShort());
+            message = new NewPhaseMessage(Phase.fromInt(bb.getShort()));
+        } else if (type.value == MSG_RETRY()) {
+            message = new RetryMessage();
+        } else if (type.value == MSG_DRAW()) {
+            var drawnCards = new ArrayList<DrawMessage.DrawnCard>();
+            byte playerId = bb.get();
+            int drawn = bb.getInt();
+            for (int i = 0; i < drawn; i++) {
+                drawnCards.add(new DrawMessage.DrawnCard(
+                        new CardCode(bb.getInt()),
+                        bb.getInt()
+                ));
+            }
+            message = new DrawMessage(playerId, drawnCards);
+        } else if (type.value == MSG_CARD_HINT()) {
+            return new CardHintMessage(
+                    new CardHintMessage.LocInfo(bb.get(), bb.get(), bb.getInt(), bb.getInt()),
+                    bb.get(),
+                    bb.getLong()
+            );
         } else {
             throw new IllegalStateException("Unknown message type: " + type);
         }

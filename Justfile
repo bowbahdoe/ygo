@@ -1,13 +1,25 @@
 help:
     just --list
 
-ygo:
+# Download and buld the core engine for yugioh
+clone_ygopro_core:
     rm -rf ygopro-core
     git clone --recurse-submodules  https://github.com/edo9300/ygopro-core
     cd ygopro-core && ./scripts/install-premake5.sh macosx
     cd ygopro-core && ./premake5 gmake2
     cd ygopro-core && make -Cbuild ocgcoreshared config=release
+    # Later on I can include the static lib in the jmod for hermetic images
+    cd ygopro-core && make -Cbuild ocgcore config=release
 
+
+# Download the Scripts for Different cards
+clone_ygopro_scripts:
+    rm -rf ygopro-scripts
+    git clone https://github.com/Fluorohydride/ygopro-scripts
+    mkdir -p dev.mccue.ygo.cards/src/dev/mccue/ygo/cards
+    cp -r ygopro-scripts/*.lua dev.mccue.ygo.cards/src/dev/mccue/ygo/cards
+
+# Generate Java bindings for ygopro_core
 generate_ygo_bindings:
     rm -rf dev.mccue.ygo/mac_aarch64
     jextract \
@@ -23,7 +35,7 @@ clean:
 
 compile: clean
     javac \
-      --module-source-path "./*/src:./*/mac_aarch64" \
+      --module-source-path "./*/shared:./*/{{os()}}_{{arch()}}" \
       --module dev.mccue.ygo \
       -d build/javac \
       --release 22 \
@@ -39,9 +51,9 @@ package: compile
     cp ygopro-core/LICENSE build/jmod/temp/legal-notices/LICENSE
 
     mkdir -p build/jmod/temp/header-files
-    cp ygopro-core/yugioh.h build/jmod/temp/header-files
+    cp ygopro-core/ocgapi.h build/jmod/temp/header-files
     cp ygopro-core/ocgapi_types.h build/jmod/temp/header-files
-    cp ygopro-core/common.h build/jmod/temp/header-files
+    cp ygopro-core/ocgapi_constants.h build/jmod/temp/header-files
 
     jmod create \
         --class-path build/javac/dev.mccue.ygo \

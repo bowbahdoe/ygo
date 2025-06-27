@@ -26,6 +26,7 @@ final class MessageType {
                     }
                 });
 
+
         values = Collections.unmodifiableMap(vs);
     }
 

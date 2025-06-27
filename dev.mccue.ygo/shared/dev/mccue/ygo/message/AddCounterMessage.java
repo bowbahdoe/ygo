@@ -1,4 +1,4 @@
-package dev.mccue.ygo;
+package dev.mccue.ygo.message;
 
 public record AddCounterMessage(
         short cttype,
@@ -6,7 +6,7 @@ public record AddCounterMessage(
         byte location,
         byte sequence,
         short pcount
-) implements Message{
+) implements Message {
     // 	message->write<uint16_t>(cttype);
     //	message->write<uint8_t>(current.controler);
     //	message->write<uint8_t>(current.location);

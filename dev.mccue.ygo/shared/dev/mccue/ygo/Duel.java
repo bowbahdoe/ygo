@@ -1,13 +1,17 @@
 package dev.mccue.ygo;
 
 import dev.mccue.ygo.bindings.*;
+import dev.mccue.ygo.logger.Log;
 
+import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,8 +29,8 @@ public final class Duel implements AutoCloseable {
         public void apply(MemorySegment payload, int code, MemorySegment data) {
             var cardData = cardReader.read(new CardCode(code));
             OCG_CardData.code(data, cardData.code().value());
-            OCG_CardData.attack(data, cardData.attack());
-            OCG_CardData.defense(data, cardData.defense());
+            OCG_CardData.attack(data, cardData.attack().value());
+            OCG_CardData.defense(data, cardData.defense().value());
         }
     }
 
@@ -58,10 +62,9 @@ public final class Duel implements AutoCloseable {
         long[] seed;
         if (builder.seed != null) {
             seed = builder.seed;
-        }
-        else {
+        } else {
             var random = ThreadLocalRandom.current();
-            seed = new long[] {
+            seed = new long[]{
                     random.nextLong(),
                     random.nextLong(),
                     random.nextLong(),
@@ -131,13 +134,11 @@ public final class Duel implements AutoCloseable {
         this.duel = duelPtr.get(OCG_Duel, 0);
     }
 
-    public void addCard() {
-
-    }
 
     public void start() {
         OCG_StartDuel(duel);
     }
+
     public DuelStatus process() {
         int status = OCG_DuelProcess(duel);
         for (var statusEnum : DuelStatus.values()) {
@@ -149,14 +150,28 @@ public final class Duel implements AutoCloseable {
         throw new IllegalStateException("Unexpected duel status: " + status);
     }
 
+    public void addCard(NewCardInfo newCardInfo) {
+        OCG_DuelNewCard(duel, newCardInfo.allocate(arena));
+    }
+
     public static Builder builder(CardReader cardReader, ScriptReader scriptReader) {
         return new Builder(cardReader, scriptReader);
     }
 
+    private record TeamInfo(
+            int drawCountPerTurn,
+            int startingDrawCount,
+            int startingLP
+    ) {
+        public TeamInfo() {
+            this(1, 5, 8000);
+        }
+    }
+
     public static final class Builder {
         private long[] seed = null;
-        private Player team1 = new Player();
-        private Player team2 = new Player();
+        private TeamInfo team1 = new TeamInfo();
+        private TeamInfo team2 = new TeamInfo();
         private final CardReader cardReader;
         private final ScriptReader scriptReader;
 
@@ -173,15 +188,69 @@ public final class Duel implements AutoCloseable {
             return this;
         }
 
-        public Builder team1(Player player) {
-            this.team1 = Objects.requireNonNull(player);
+        public Builder drawCountPerTurn(Team team, int drawCountPerTurn) {
+            switch (team) {
+                case ZERO -> {
+                    this.team1 = new TeamInfo(
+                            drawCountPerTurn,
+                            this.team1.startingDrawCount(),
+                            this.team1.startingLP()
+                    );
+                }
+                case ONE -> {
+                    this.team2 = new TeamInfo(
+                            drawCountPerTurn,
+                            this.team2.startingDrawCount(),
+                            this.team2.startingLP()
+                    );
+                }
+            }
+
             return this;
         }
 
-        public Builder team2(Player player) {
-            this.team2 = Objects.requireNonNull(player);
+        public Builder startingDrawCount(Team team, int startingDrawCount) {
+            switch (team) {
+                case ZERO -> {
+                    this.team1 = new TeamInfo(
+                            this.team1.drawCountPerTurn(),
+                            startingDrawCount,
+                            this.team1.startingLP()
+                    );
+                }
+                case ONE -> {
+                    this.team2 = new TeamInfo(
+                            this.team2.drawCountPerTurn(),
+                            startingDrawCount,
+                            this.team2.startingLP()
+                    );
+                }
+            }
+
             return this;
         }
+
+        public Builder startingLP(Team team, int lp) {
+            switch (team) {
+                case ZERO -> {
+                    this.team1 = new TeamInfo(
+                            this.team1.drawCountPerTurn(),
+                            this.team1.startingDrawCount(),
+                            lp
+                    );
+                }
+                case ONE -> {
+                    this.team2 = new TeamInfo(
+                            this.team2.drawCountPerTurn(),
+                            this.team2.startingDrawCount(),
+                            lp
+                    );
+                }
+            }
+
+            return this;
+        }
+
 
         public Duel build() {
             return new Duel(this);
@@ -196,14 +265,57 @@ public final class Duel implements AutoCloseable {
 
     public static void main(String[] args) {
         var d = Duel.builder(
-                code -> new CardData(code),
-                name -> java.util.Optional.empty()
+                code -> {
+                    Log.info("Loading card: " + code);
+                    return new CardData(code);
+                },
+                name -> {
+                    Log.info("Loading Script: " + name);
+                    var p = Path.of("ygopro-scripts", name);
+                    try {
+                        var data = Files.readString(p);
+                        Log.info(data);
+                        return Optional.of(data);
+                    } catch (NoSuchFileException f) {
+                        return Optional.empty();
+                    } catch (IOException e) {
+                        e.printStackTrace(System.err);
+                        return Optional.empty();
+                    }
+                }
         ).build();
-        d.start();
+        for (int i = 1; i < 30; i++) {
+            d.addCard(new NewCardInfo(
+                    Team.ZERO,
+                    (byte) 0,
+                    new CardCode(1 + (int) (400 * Math.random())),
+                    (byte) 0,
+                    Location.DECK,
+                    0,
+                    0
+            ));
+            d.addCard(new NewCardInfo(
+                    Team.ONE,
+                    (byte) 0,
+                    new CardCode(1 + (int) (400 * Math.random())),
+                    (byte) 0,
+                    Location.DECK,
+                    0,
+                    0
+            ));
+        }
 
+        System.out.println(d.getMessages().stream().map(RawMessage::parse)
+                .toList());
+        System.out.println(d.getMessages().stream().map(RawMessage::parse)
+                .toList());
+        d.start();
         while (d.process() != DuelStatus.AWAITING) {
             System.out.println(d.getMessages().stream().map(RawMessage::parse)
-                    .toList());;
+                    .toList());
+            System.out.println(d.getMessages().stream().map(RawMessage::parse)
+                    .toList());
+            ;
         }
     }
 
@@ -213,7 +325,7 @@ public final class Duel implements AutoCloseable {
             var lengthPtr = innerArena.allocate(C_INT);
             var msgBuffer = OCG_DuelGetMessage(duel, lengthPtr);
             var length = lengthPtr.get(C_INT, 0);
-            if (length == 0){
+            if (length == 0) {
                 return Collections.unmodifiableList(messages);
             }
             msgBuffer = msgBuffer.reinterpret(length);
