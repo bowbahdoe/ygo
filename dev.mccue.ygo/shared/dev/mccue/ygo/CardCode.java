@@ -8,6 +8,6 @@ public record CardCode(int value) {
     }
     @Override
     public String toString() {
-        return "CardCode[value=" + Integer.toUnsignedString(value) + "]";
+        return "CardCode[" + Integer.toUnsignedString(value) + "]";
     }
 }

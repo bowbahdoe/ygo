@@ -29,5 +29,7 @@ bin/
 .DS_Store
 
 ygopro-core
+ygopro-scripts
 build
 out
+.cpcache

@@ -21,10 +21,10 @@ clone_ygopro_scripts:
 
 # Generate Java bindings for ygopro_core
 generate_ygo_bindings:
-    rm -rf dev.mccue.ygo/mac_aarch64
+    rm -rf dev.mccue.ygo/{{os()}}_{{arch()}}
     jextract \
         --include-dir ygopro-core \
-        --output dev.mccue.ygo/mac_aarch64 \
+        --output dev.mccue.ygo/{{os()}}_{{arch()}} \
         --library ocgcore \
         --use-system-load-library \
         --target-package dev.mccue.ygo.bindings \
@@ -42,7 +42,7 @@ compile: clean
       -g
 
 package: compile
-    mkdir -p build/jmod/mac_aarch64/
+    mkdir -p build/jmod/{{os()}}_{{arch()}}/
 
     mkdir -p build/jmod/temp
 
@@ -60,6 +60,6 @@ package: compile
         --libs ygopro-core/bin/release \
         --legal-notices build/jmod/temp/legal-notices \
         --header-files build/jmod/temp/header-files \
-        build/jmod/mac_aarch64/dev.mccue.ygo.jmod
+        build/jmod/{{os()}}_{{arch()}}/dev.mccue.ygo.jmod
 
     rm -rf build/jmod/temp

@@ -12,7 +12,7 @@ public record NewCardInfo(
         byte con,
         Location loc,
         int seq,
-        int pos
+        CardPos pos
 ) {
     // typedef struct OCG_NewCardInfo {
     //	uint8_t team; /* either 0 or 1 */
@@ -32,7 +32,7 @@ public record NewCardInfo(
         OCG_NewCardInfo.con(segment, con);
         OCG_NewCardInfo.loc(segment, loc.value);
         OCG_NewCardInfo.seq(segment, seq);
-        OCG_NewCardInfo.pos(segment, pos);
+        OCG_NewCardInfo.pos(segment, pos.value);
         return segment;
     }
 }

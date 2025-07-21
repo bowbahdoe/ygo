@@ -21,16 +21,24 @@ import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 public final class Duel implements AutoCloseable {
     private final Arena arena;
     private final MemorySegment duel;
+    private boolean closed = false;
 
     private record DataReaderDelegate(CardReader cardReader)
             implements OCG_DataReader.Function {
 
         @Override
         public void apply(MemorySegment payload, int code, MemorySegment data) {
-            var cardData = cardReader.read(new CardCode(code));
-            OCG_CardData.code(data, cardData.code().value());
-            OCG_CardData.attack(data, cardData.attack().value());
-            OCG_CardData.defense(data, cardData.defense().value());
+            try {
+
+                var cardData = cardReader.read(new CardCode(code));
+                OCG_CardData.code(data, cardData.code().value());
+                OCG_CardData.attack(data, cardData.attack().value());
+                OCG_CardData.defense(data, cardData.defense().value());
+
+                OCG_CardData.link_marker(data, LinkMarker.combine(cardData.linkMarker()));
+            } catch (Throwable t) {
+                Log.error("Unexpected Throwable thrown in OCG_DataReader", t);
+            }
         }
     }
 
@@ -39,20 +47,25 @@ public final class Duel implements AutoCloseable {
 
         @Override
         public int apply(MemorySegment payload, MemorySegment duel, MemorySegment name) {
-            var script = scriptReader.read(name.getString(0)).orElse(null);
+            try {
+                var script = scriptReader.read(name.getString(0)).orElse(null);
 
-            if (script != null) {
-                try (var arena = Arena.ofConfined()) {
-                    var bytes = script.getBytes(StandardCharsets.UTF_8);
-                    var arr = arena.allocate(JAVA_BYTE, bytes.length);
-                    for (int i = 0; i < bytes.length; i++) {
-                        arr.set(JAVA_BYTE, i, bytes[i]);
+                if (script != null) {
+                    try (var arena = Arena.ofConfined()) {
+                        var bytes = script.getBytes(StandardCharsets.UTF_8);
+                        var arr = arena.allocate(JAVA_BYTE, bytes.length);
+                        for (int i = 0; i < bytes.length; i++) {
+                            arr.set(JAVA_BYTE, i, bytes[i]);
+                        }
+                        OCG_LoadScript(duel, arr, bytes.length, name);
                     }
-                    OCG_LoadScript(duel, arr, bytes.length, name);
+                    return 1;
                 }
-                return 1;
+                return 0;
+            } catch (Throwable t) {
+                Log.error("Unexpected Throwable thrown in OCG_DataReader", t);
+                return 0;
             }
-            return 0;
         }
     }
 
@@ -259,8 +272,13 @@ public final class Duel implements AutoCloseable {
 
     @Override
     public void close() {
+        if (closed) {
+            throw new IllegalStateException("Already closed out the duel");
+        }
+
         OCG_DestroyDuel(duel);
         arena.close();
+        closed = true;
     }
 
     public static void main(String[] args) {
@@ -292,7 +310,7 @@ public final class Duel implements AutoCloseable {
                     (byte) 0,
                     Location.DECK,
                     0,
-                    0
+                    CardPos.FACEDOWN
             ));
             d.addCard(new NewCardInfo(
                     Team.ONE,
@@ -301,7 +319,7 @@ public final class Duel implements AutoCloseable {
                     (byte) 0,
                     Location.DECK,
                     0,
-                    0
+                    CardPos.FACEDOWN
             ));
         }
 
@@ -315,7 +333,6 @@ public final class Duel implements AutoCloseable {
                     .toList());
             System.out.println(d.getMessages().stream().map(RawMessage::parse)
                     .toList());
-            ;
         }
     }
 

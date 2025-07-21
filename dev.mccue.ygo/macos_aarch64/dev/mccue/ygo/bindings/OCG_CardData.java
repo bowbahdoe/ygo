@@ -26,7 +26,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     int32_t defense;
  *     uint32_t lscale;
  *     uint32_t rscale;
- *     uint32_t link_marker;
+ *     uint32_t linkMarker;
  * }
  * }
  */
@@ -49,7 +49,7 @@ public class OCG_CardData {
         yugioh_h.C_INT.withName("defense"),
         yugioh_h.C_INT.withName("lscale"),
         yugioh_h.C_INT.withName("rscale"),
-        yugioh_h.C_INT.withName("link_marker"),
+        yugioh_h.C_INT.withName("linkMarker"),
         MemoryLayout.paddingLayout(4)
     ).withName("OCG_CardData");
 
@@ -544,12 +544,12 @@ public class OCG_CardData {
         struct.set(rscale$LAYOUT, rscale$OFFSET, fieldValue);
     }
 
-    private static final OfInt link_marker$LAYOUT = (OfInt)$LAYOUT.select(groupElement("link_marker"));
+    private static final OfInt link_marker$LAYOUT = (OfInt)$LAYOUT.select(groupElement("linkMarker"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * uint32_t link_marker
+     * uint32_t linkMarker
      * }
      */
     public static final OfInt link_marker$layout() {
@@ -561,7 +561,7 @@ public class OCG_CardData {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * uint32_t link_marker
+     * uint32_t linkMarker
      * }
      */
     public static final long link_marker$offset() {
@@ -571,7 +571,7 @@ public class OCG_CardData {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * uint32_t link_marker
+     * uint32_t linkMarker
      * }
      */
     public static int link_marker(MemorySegment struct) {
@@ -581,7 +581,7 @@ public class OCG_CardData {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * uint32_t link_marker
+     * uint32_t linkMarker
      * }
      */
     public static void link_marker(MemorySegment struct, int fieldValue) {

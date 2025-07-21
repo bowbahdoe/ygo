@@ -21,7 +21,7 @@ public enum Hint {
     static final Map<Integer, Hint> values;
 
     static {
-        var vs = new HashMap<Integer, Hint>();
+        var vs = new LinkedHashMap<Integer, Hint>();
 
         for (var v : Hint.values()) {
             vs.put(v.value, v);

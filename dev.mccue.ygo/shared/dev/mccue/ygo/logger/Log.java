@@ -18,4 +18,8 @@ public final class Log {
     public static void error(String message) {
         LOGGER.log(System.Logger.Level.ERROR, message);
     }
+
+    public static void error(String message, Throwable t) {
+        LOGGER.log(System.Logger.Level.ERROR, message, t);
+    }
 }

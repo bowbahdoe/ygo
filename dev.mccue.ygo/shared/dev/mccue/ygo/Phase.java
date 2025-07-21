@@ -1,7 +1,7 @@
 package dev.mccue.ygo;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static dev.mccue.ygo.bindings.yugioh_h.*;
@@ -27,7 +27,7 @@ public enum Phase {
     static final Map<Integer, Phase> values;
 
     static {
-        var vs = new HashMap<Integer, Phase>();
+        var vs = new LinkedHashMap<Integer, Phase>();
 
         for (var v : Phase.values()) {
             vs.put(v.value, v);
